@@ -189,16 +189,11 @@ The website was deployed using Heroku using the following steps:
 <p>Go to the manual deploy section and click the "Deploy Branch" button</p>
 <p>Wait for the app to build and then click on the "View" link</p>
 
-The live link can be found here - https://feeling-fragrant.herokuapp.com/
+The live link will be updated very soon
 
 Credits
 ======
 
-### Content and Media
-
-<p>https://burrenperfumery.com/</p>
-<p>https://www.thegoodgarden.ie/</p>
-<p>https://www.thelittlewaxcompany.ie/</p>
 
 ### Acknowledgements
 

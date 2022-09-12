@@ -1,0 +1,564 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block page_header %}
+{% load daguerre %}
+{% load bag_tools %}
+{% load social_share %}
+
+
+<div class="container header-container">
+  <div class="row">
+    <div class="col"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<style media="screen">
+
+</style>
+<div class="overlay"></div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+      <div class="card pb-5 text-center">
+
+    {% adjust product.image 'fit' width=1600 height=1600 as image %}
+    {% adjust product.image2 'fit' width=1600 height=1600 as image2 %}
+    {% adjust product.image3 'fit' width=1600 height=1600 as image3 %}
+     <div class="img-show pt-2" href="{{image}}">
+       <img src="{{image}}" id="img-show-img">
+     </div>
+
+
+       <div class="small-img text-center container-fluid">
+         <div class="small-container">
+          <div id="small-img-roll">
+            <img src="{{product.image.url}}" class="img-show-small-img" alt="">
+            <img src="{{product.image2.url}}" class="img-show-small-img" alt="">
+            <img src="{{product.image3.url}}" class="img-show-small-img" alt="">
+          </div>
+         </div>
+       </div>
+            </div>
+            <div class="card mt">
+              <div class="container pt-2 pb-2">
+                <h6>Reviews</h6>
+                {% include 'products/includes/large-rating.html' %}
+                <hr>
+                {% with comments.count as total_comments %}
+                <div class="badges"><span class="badge bg-warning"> <span class="ml-1">{{total_comments}} {% if total_comments == 1 %}review{% else %}reviews{% endif %}</span> </span> </div>
+                {% endwith %}
+                <hr>
+                <div id="text" style="display:none">
+                  <div class="comment-section">
+                    {% for comment in comments %}
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="d-flex flex-row align-items-center"> <img src="{{ MEDIA_URL }}placeholder.jpg" class="rounded-circle profile-image">
+                        <div class="d-flex flex-column ml-1 comment-profile">
+                          <div class="username"> {{comment.user}} </div><div>{% include 'products/includes/rating.html' %}</div> <span class="comment-body">{{comment.body}}</span>
+                        </div>
+                      </div>
+                      <div class="date"> <span class="text-muted">{{ comment.created_on }}</span> </div>
+                    </div>
+                    {% if comment.reply %}
+                    <div class="container">
+                      <hr>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center ml-3 pl-1 account-reply">
+                      <div class="d-flex flex-row align-items-center"> <img src="{{ MEDIA_URL }}placeholder.jpg" class="rounded-circle profile-image">
+                        <div class="d-flex flex-column ml-1 comment-profile">
+                          <div class="username"> The Good Company </div><span class="comment-body">{{comment.reply}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    {% endif %}
+                    <hr>
+                    {% endfor %}
+                  </div>
+                </div>
+
+                {% if comments %}
+                <div class="text-center">
+                  <a id="toggle" class="nav-toggle read-more text-primary">Read reviews</a>
+                </div>
+                {% else %}
+                <div class="text-center">
+                  <a class="nav-toggle read-more text-primary">No reviews</a>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="card mt-2 text-center">
+              <div class="container-fluid">
+                <div class="comment-section">
+                  <div class="success-display" id="success-display">
+                    <div class="text text-success mt-2 mb-2" role="alert">
+                      Thanks for commenting on this product.
+                    </div>
+                  </div>
+                  {% if request.user.is_authenticated %}
+                  <form method="POST" class="mt-3 mb-3 commentForm" id = "commentForm">
+                    <p class="text-center">Review this product</p>
+
+                    <div class="container">
+                    <div class="row">
+                      <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4 my-auto rate-text">
+                        Rate:
+                      </div>
+                      <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8 my-auto rate-stars">
+                        <div class="rate">
+                          <input type="radio" id="star5" name="rate" value="5"/>
+                          <label for="star5" title="5">5 stars</label>
+                          <input type="radio" id="star4" name="rate" value="4" />
+                          <label for="star4" title="4">4 stars</label>
+                          <input type="radio" id="star3" name="rate" value="3" />
+                          <label for="star3" title="3">3 stars</label>
+                          <input type="radio" id="star2" name="rate" value="2" />
+                          <label for="star2" title="2">2 stars</label>
+                          <input type="radio" id="star1" name="rate" value="1" />
+                          <label for="star1" title="1">1 star</label>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                    {{ comment_form.body }}
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-black rounded-0 text-uppercase mt-1"><i class="fa fa-star" aria-hidden="true"></i><span class="review-submit">Submit</span><i class="fa fa-star" aria-hidden="true"></i></button>
+                  </form>
+                  {% else %}
+                  <p class="my-auto pt-2 pb-2"><a style="color: blue" href="{% url 'account_login' %}">Login </a> to comment on this product</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-8 col-xl-8">
+          <div class="row">
+          <div class="col-12 col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 pl-lg-0 pl-xl-0">
+            <div class="card">
+              <div class="product-details-container mb-4 mt-2">
+                <div class="container-fluid">
+                  <div class="product-heading mt-3 mb-2">
+                    <h3 class="mb-0">{{ product.name }}</h3>
+                  </div>
+                  <div class="product-pricing mt-4">
+                    <p class="lead mb-0 text-left font-weight-bold">ksh {{ product.price }}</p>
+                  </div>
+                  {% if product.subcategory %}
+                  <p class="mt-1 mb-0">
+                    {% for sub in product.subcategory.all %}
+                    {% if forloop.last %}
+                    <a class="category_name text-muted" href="{% url 'products' %}?subcategory={{ sub.name }}">
+                      {{sub.name}}({{sub.friendly_name}})
+                    </a>
+                    {% elif forloop.first %}
+                    <a class="category_name text-muted" href="{% url 'products' %}?subcategory={{ sub.name }}">
+                      <i class="fas fa-tag category_tag"></i>{{sub.name}}({{sub.friendly_name}}),
+                    </a>
+                    {% else %}
+                    <a class="category_name text-muted" href="{% url 'products' %}?subcategory={{ sub.name }}">
+                      {{sub.name}}({{sub.friendly_name}}),
+                    </a>
+                    {% endif %}
+                    {% endfor %}
+                  </p>
+                  {% endif %}
+                  {% if request.user.is_superuser %}
+                  <p class="edit-delete">
+                    <a href="{% url 'edit_product' product.id %}">Edit</a> |
+                    <a class="text-danger" href="{% url 'delete_product' product.id %}">Delete</a>
+                  </p>
+                  {% endif %}
+                </div>
+                <div class="row mt-4 mb-3 description-tabs container-fluid-desc-tabs">
+                  <div class="col-xs-12 ">
+                    <nav>
+                      <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active mt-xs-2 mt-sm-2 mt-md-2 mt-lg-2" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Description</a>
+                        <a class="nav-item nav-link ml-xl-3 mt-xs-2 mt-sm-2 mt-md-2 mt-lg-2" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Additional Information</a>
+                      </div>
+                    </nav>
+                    <div class="pt-4 tab-content px-sm-0" id="nav-tabContent">
+                      <div class="tab-pane fade show active text-justify" id="nav-home" role="tabpanel" aria-labelledby="nav-profile-tab">
+                        {{ product.description | safe}}
+                      </div>
+                      <div class="tab-pane fade text-justify" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                        {{product.additional_description | safe}}
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+                </div>
+              </div>
+              {% if product.youtube_video_url != None %}
+              <div class="card">
+                <a type="button" class="btn btn-primary video-btn" data-toggle="modal" data-src="{{product.youtube_video_url}}" data-target="#myModalYoutube">
+                <div class="play"></div>
+                <span>Play {{product.name}} walk-through</span>
+                </a>
+              </div>
+              {% else %}
+              {% endif %}
+              <!-- Modal -->
+              <div class="modal fade" id="myModalYoutube" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog-video" role="document">
+                  <div class="modal-content">
+
+                    <div class="modal-body">
+
+                     <button type="button" class="close kclose" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                      <!-- 16:9 aspect ratio -->
+              <div class="embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item" src="" id="video"  allowscriptaccess="always" allow="autoplay"></iframe>
+              </div>
+              </div>
+              </div>
+              </div>
+              </div>
+              </div>
+              <div class="col-12 col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 pl-lg-0 pl-xl-0">
+                <div class="card">
+                <div class="container-fluid">
+                  <div class="lipia-card card mb-3 ">
+                    <div class="card-body text-center">
+                      <h5 class="card-title text-black text-left">{{site_name}}</h5>
+                      <p class="lipia-card-text-big text-justify">A way for you to pay off your desired products slowly with no interest.</p>
+                      <a href="#" class="btn lipia-button rounded-0 mt-1 btn-outline-black">
+                        <span class="my-auto">
+                        <span class="text-uppercase text-black">Learn More about {{site_name}}</span>
+                        </span>
+                      </a>
+                    </div>
+                  </div>
+
+                  {% comment %} {% for item in bag_items %}
+                    {% if product.id == item.product.id and item.size == "payment_in_installments" %}
+                        {% include "products/includes/add-to-cart-active.html" %}
+                      {% elif product.id != item.product.id or item.size != "payment_in_installments" %}
+                        {% else %}
+                        {% include "products/includes/add-to-cart.html" %}
+                      {% endif %}
+                      {% empty %}
+                      {% include "products/includes/add-to-cart.html" %}
+                  {% endfor %} {% endcomment %}
+                  {% if product.available == True %}
+                  <p class="available">Available</p>
+                  <p class="delivery">delivery within 4 working days</p>
+
+                  <div class="wrapper2">
+                    <input type="radio" name="select" id="option-1" checked onclick="check_radio()">
+                    <input type="radio" name="select" id="option-2" onclick="check_radio()">
+                    <label for="option-1" class="option option-1">
+                      <span>pay in full amount</span>
+                    </label>
+                    <label for="option-2" class="option option-2">
+                      <span>Pay in installments</span>
+                    </label>
+                  </div>
+
+                  <div class="container-fluid" id="quantity-limit">
+                    <p class="mb-2 small text-danger text-justify my-0">
+                      <span class="icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                      </span>
+                      <span>You cannot have more than one same product in your bag under paying in installments.</span>
+                    </p>
+                    <hr>
+                    <span class="payment-details">First Payment: ksh {{product.slow_price}}</span><br>
+                    <span class="payment-details">Annual monthly payments:</span>
+                    <div class="payment-details-monthly mt-1 row" id="payment-details-monthly"></div>
+                  </div>
+
+                  <form class="form" action="{% url 'add_to_bag' product.id %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-ro">
+                      <div class="col-12 quantity-input" id="quantity-input">
+                        <p class="mt-3"><strong>Quantity:</strong></p>
+                        <div class="form-group w-100">
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <button class="decrement-qty btn btn-black rounded-0"
+                              data-item_id="{{ product.id }}" id="decrement-qty_{{ product.id }}">
+                              <span class="icon">
+                                <i class="fas fa-minus"></i>
+                              </span>
+                            </button>
+                          </div>
+                          <input id="quantity-value" class="form-control border-black qty_input text-center" type="number"
+                          name="quantity" value="1" min="1" max="99"
+                          data-item_id="{{ product.id }}"
+                          id="id_qty_{{ product.id }}">
+                          <input type="hidden" name="type_pay" id="type-pay" value="payment_in_full">
+                          <div class="input-group-append">
+                            <button class="increment-qty btn btn-black rounded-0"
+                            data-item_id="{{ product.id }}" id="increment-qty_{{ product.id }}">
+                            <span class="icon">
+                              <i class="fas fa-plus"></i>
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12  pr-0">
+                      <a href="{% url 'products' %}" class="btn btn-outline-black rounded-0 mt-1 col-12  pl-0">
+                        <span class="icon"><i class="fas fa-chevron-left"></i></span>Keep Shopping</a>
+                    </div>
+                    <div class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                      <input type="submit" class="btn btn-black rounded-0 mt-1 col-12" value="Add to Bag">
+                    </div>
+                  </div>
+                  <input type="hidden" name="redirect_url" value="{{ request.path }}">
+                </div>
+                {% else %}
+                <p class = "unavailable">Unavailable</p>
+                <p class="delivery">Check again after a few days</p>
+                {% endif %}
+              </form>
+              <div id="wrapper-likey" class="text-center pb-2">
+                {% include "products/includes/like-injection.html" %}
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="container-fluid">
+              <div class="social-media-buttons">
+                <div class="row">
+                  <div class="col-custom-3 pr-0">
+                    {% post_to_whatsapp object_or_url  "<button class = 'whatsapp' title = 'Share on Whatsapp'><i class='fa fa-whatsapp whatsapp-icon' aria-hidden='true'></i><span class='my-auto'>App</span></button>" %}
+                  </div>
+                  <div class="col-custom-3 pr-0">
+                    {% post_to_telegram "{{meta_product_name}} | {{meta_product_description}}" object_or_url "<button class = 'telegram' title = 'Share on Telegram'><i class='fab fa-telegram-plane telegram-icon' aria-hidden='true'></i>Share</button>" %}
+                  </div>
+                  <div class="col-custom-3 pr-0">
+                    {% post_to_facebook object_or_url "<button class = 'facebook' title = 'Share on Facebook'><i class='fa fa fa-facebook-f facebook-icon' aria-hidden='true'></i>Post</button>" %}
+                  </div>
+                  <div class="col-custom-3">
+                    {% post_to_twitter "{{meta_product_name}} | {{meta_product_description}}" object_or_url "<button class = 'twitter' title = 'Share on Twitter'><i class='fa fa fa-twitter twitter-icon' aria-hidden='true'></i>Tweet</button>" %}
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+        <div class="row">
+          <div class="col-12 col-md-12 col-lg-12 col-xl-12 col-xs-12">
+            <div class="mt-2">
+              <div class="card ">
+                {% if similar_products %}
+                <section class="pt-1 pb-1">
+                  <div class="container">
+                    <div class="row">
+                      <div class="section-heading-instructions pb-2 col-6">
+                        <h2 class="">Related Products</h2>
+                      </div>
+                      {% if similar_products.count > 6 %}
+                      <div class="col-6 text-right pt-5">
+                        <a class="btn btn-black mb-3 mr-1 rounded-0 my-auto" href="#carouselExampleIndicators2" role="button" data-slide="prev">
+                          <i class="fa fa-arrow-left"></i>
+                        </a>
+                        <a class="btn btn-black mb-3 rounded-0 my-auto" href="#carouselExampleIndicators2" role="button" data-slide="next">
+                          <i class="fa fa-arrow-right"></i>
+                        </a>
+                      </div>
+                      {% else %}
+                      {% endif %}
+                      <div class="col-12">
+                        <div id="carouselExampleIndicators2" class="carousel slide" {% if similar_products.count > 6 %} data-ride="carousel" data-interval="10000"{% else %}{% endif %}>
+
+                          <div class="carousel-inner">
+                            {% with ' '|center:2 as range %}
+                            {% for sublist in range %}
+                            <div class="carousel-item {% if forloop.first %} active {% endif %}">
+                              <div class="row">
+                                {% if forloop.counter == 1 %}
+                                {% for product in similar_products|slice:":6" %}
+                                <div class="col-md-2 mb-2 col-custom-6">
+                                  <div class="card recommend-card text-center">
+                                    <a href="{{product.get_absolute_url}}">
+                                      {% adjust product.image 'fit' width=1200 height=1200 as image %}
+                                      <img class="img-fluid" alt="{{product.name}}" src="{{image}}">
+                                      <div class="text-center">
+                                        <h4 class="card-title">{{product.name}}</h4>
+                                      </div>
+                                    </a>
+                                  </div>
+                                </div>
+                                {% endfor %}
+                                {% else %}
+                                {% for product in similar_products|slice:"6:12" %}
+                                <div class="col-md-2 mb-2 col-custom-6">
+                                  <div class="card recommend-card text-center">
+                                    <a href="{{product.get_absolute_url}}">
+                                      {% adjust product.image 'fit' width=1200 height=1200 as image %}
+                                      <img class="img-fluid" alt="{{product.name}}" src="{{image}}">
+                                      <div class="text-center">
+                                        <h4 class="card-title">{{product.name}}</h4>
+                                      </div>
+                                    </a>
+                                  </div>
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+                              </div>
+                            </div>
+                            {% endfor %}
+                            {% endwith %}
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+                    {% else %}
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <script src="{% static 'js/zoom-image.js' %}"></script>
+        <script src="{% static 'js/zoom-main.js' %}"></script>
+        <script type="text/javascript">
+          $(document).ready(function() {
+            $("#toggle").click(function() {
+              var elem = $("#toggle").text();
+              if (elem == "Read reviews") {
+                //Stuff to do when btn is in the read more state
+                $("#toggle").text("Done reading reviews?");
+                $("#text").slideDown();
+              } else {
+                //Stuff to do when btn is in the read less state
+                $("#toggle").text("Read reviews");
+                $("#text").slideUp();
+              }
+            });
+          });
+
+          $(document).on('submit', '#commentForm', function(e){
+            e.preventDefault();
+            rates = $(document.getElementsByName('rate'));
+            var rate_value;
+            for(var i = 0; i < rates.length; i++){
+              if(rates[i].checked){
+                rate_value = rates[i].value;
+              }
+            }
+            $.ajax({
+              method:'POST',
+              url:"{{product.get_absolute_url}}",
+              data:{
+                rate:rate_value,
+                body:$('#id_body').val(),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                action:'ajax-post'
+              },
+              success:function(json){
+                document.getElementById("commentForm").style.display = "none";
+                document.getElementById("success-display").style.display = "block";
+              },
+              error : function(xhr,errmsg,err) {
+                console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+              }
+            });
+          });
+
+          $(document).on('submit', '#likeForm', function(e){
+            e.preventDefault();
+            $.ajax({
+              method:'POST',
+              url:"{% url 'like_product' product.pk %}",
+              data:{
+                product_id:$('#likeBtn').val(),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                action:'ajax-post'
+              },
+              success:function(json){
+                console.log(json);
+                $("#wrapper-likey div").replaceWith(json);
+              },
+              error : function(xhr,errmsg,err) {
+                console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+              }
+            });
+          });
+
+          $(document).ready(function() {
+            $( ".lipia-card" ).hover(
+            function() {
+              $(this).addClass('shadow-lg').css('cursor', 'pointer');
+            }, function() {
+              $(this).removeClass('shadow-lg');
+            }
+            );
+
+          });
+
+          function check_radio() {
+            var option_1 = document.getElementById("option-1").checked;
+            var option_2 = document.getElementById("option-2").checked;
+            if (option_2 == true) {
+              document.getElementById("quantity-input").style.display = "none";
+              document.getElementById("quantity-limit").style.display = "block";
+              document.getElementById("type-pay").value = "payment_in_installments";
+              console.log($('#type-pay').val());
+            }
+            else if (option_2 == false) {
+              document.getElementById("quantity-input").style.display = "block";
+              document.getElementById("quantity-limit").style.display = "none";
+              document.getElementById("type-pay").value = "payment_in_full";
+              console.log($('#type-pay').val());
+            }
+          }
+
+          var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+          var d = new Date()
+          d.setDate(1);
+
+          for ( var i = 0; i < 12; i++ ){
+            d.setMonth(d.getMonth() + 1);
+            const payment_detail_container = document.getElementById("payment-details-monthly");
+            payment_detail_container.insertAdjacentHTML('beforeend', '<div class = "monthly_payment col-md-6 mb-3">' + '<b>' + monthNames[d.getMonth()] + ' ' + d.getFullYear() + '</b>' + '</br><span class="text-center">' +  'ksh' + Math.round(({{product.price}} - {{product.slow_price}})/12 + 100) + '</span>' + '</div>');
+          };
+
+          $(document).ready(function() {
+          // Gets the video src from the data-src on each button
+
+          var $videoSrc;
+          $('.video-btn').click(function() {
+              $videoSrc = $(this).data( "src" );
+          });
+          console.log($videoSrc);
+
+          // when the modal is opened autoplay it
+          $('#myModalYoutube').on('shown.bs.modal', function (e) {
+
+          // set the video src to autoplay and not to show related video. Youtube related video is like a box of chocolates... you never know what you're gonna get
+          $("#video").attr('src',$videoSrc + "?autoplay=1&amp;modestbranding=1&amp;showinfo=0" );
+          })
+
+          // stop playing the youtube video when I close the modal
+          $('#myModalYoutube').on('hide.bs.modal', function (e) {
+              // a poor man's stop video
+              $("#video").attr('src',$videoSrc);
+          })
+          // document ready
+          });
+        </script>
+        {% endblock %}
+
+        {% block postloadjs %}
+        {{ block.super }}
+        {% include 'products/includes/quantity_input_script.html' %}
+        {% endblock %}

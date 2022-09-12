@@ -1,0 +1,22 @@
+{% load static %}
+
+<div class="col-md-12">
+  <hr>
+  {% if user.is_authenticated %}
+  <form method="POST" id="likeForm">
+    {% csrf_token %}
+    {% if liked %}
+    <button type="submit" style="font-weight: bold" id="likeBtn" name ="product_id" value = {{product.id}} class="btn btn-light"><div class="row"><div class="col-md-4 my-auto"><img width=30 src="{% static 'images/unlike.svg' %}" alt=""></div><div class="like-text col-md-8">Remove this from your favourites</div></div></button>
+    {% else %}
+    <button type="submit" style="font-weight: bold" id="likeBtn" name ="product_id" value = {{product.id}} class="btn btn-light"><div class="row"><div class="col-md-4 my-auto"><img width=30 src="{% static 'images/like.svg' %}" alt=""></div><div class="like-text col-md-8">Add this to your favourites</div></div></button>
+    {% endif %}
+   </form>
+   {% else %}
+   <span><a style="color: blue" href="{% url 'account_login' %}">Login </a>to add this product to your favourites.</span><br>
+   {% endif %}
+   {% comment %} {% if total_likes > 1 %}
+   <span style="font-weight: bold">{{total_likes}} likes</span>
+   {% else %}
+   <span style="font-weight: bold">{{total_likes}} like</span>
+   {% endif %} {% endcomment %}
+   </div>

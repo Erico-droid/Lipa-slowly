@@ -1,0 +1,39 @@
+<div class="collapse navbar-collapse stroke" id="main-nav">
+    <ul class="nav navbar-nav w-auto mx-auto">
+      {% for sup_category in base_supercategories %}
+        <li class="nav-item main-nav-item dropdown megaDropMenu dropdown-hover position-static">
+            <a class="main-menu-nav text-black mr-2" href="#" id="all-products-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{sup_category}}
+            </a>
+            <ul class="dropdown-menu pb-0" aria-labelledby="wax-link">
+              <div class="two-col-display text-left">
+              {% for category in sup_category.category.all %}
+                <li><a href="{% url 'products' %}?category={{category.name}}" class="dropdown-item menu-cat-display">{{category.name|upper}}</a></li>
+                {% for sub in category.subcategory.all %}
+                  <li><a href="{% url 'products' %}?subcategory={{sub.name}}" class="dropdown-item">{{sub.name}}</a></li>
+                  {% if forloop.last %}
+                  <br>
+                  {% endif %}
+                {% endfor %}
+              {% endfor %}
+              {% for category in sup_category.category.all|slice:":1" %}
+              {% if category.brand_category %}
+              <li><a href="" class="dropdown-item menu-cat-display">BRANDS</a></li>
+              {% endif %}
+              {% endfor %}
+              {% for category in sup_category.category.all %}
+              {% if category.brand_category %}
+              {% for brand in category.brand_category.all %}
+              <li><a href="{% url 'products' %}?subcategory={{sub.name}}" class="dropdown-item">{{brand.name}}</a></li>
+              {% if forloop.last %}
+              <br>
+              {% endif %}
+              {% endfor %}
+              {% endif %}
+              {% endfor %}
+              </div>
+            </ul>
+        </li>
+        {% endfor %}
+    </ul>
+</div>

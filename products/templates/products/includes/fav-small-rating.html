@@ -1,0 +1,25 @@
+{% if fav.average_rating == 1 or product.average_rating == 1 %}
+<div class="d-flex flex-row">
+    <div class="comment-stars fav-stars-bottom-right align-items-center justify-content-center"> <i class="fa fa-star gold"></i> <i class="fa fa-star grey"></i> <i class="fa fa-star grey"></i><i class="fa fa-star grey"></i><i class="fa fa-star grey"></i> </div>
+</div>
+{% elif fav.average_rating == 2 or product.average_rating == 2 %}
+<div class="d-flex flex-row">
+    <div class="comment-stars fav-stars-bottom-right align-items-center justify-content-center"> <i class="fa fa-star gold"></i><i class="fa fa-star gold"></i><i class="fa fa-star grey"></i><i class="fa fa-star grey"></i><i class="fa fa-star grey"></i> </div>
+</div>
+{% elif fav.average_rating == 3 or product.average_rating == 3 %}
+<div class="d-flex flex-row">
+    <div class="comment-stars fav-stars-bottom-right align-items-center justify-content-center"> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star grey"></i> <i class="fa fa-star grey"></i> </div>
+</div>
+{% elif fav.average_rating == 4 or product.average_rating == 4 %}
+<div class="d-flex flex-row">
+    <div class="comment-stars fav-stars-bottom-right align-items-center justify-content-center"> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star grey"></i>
+</div></div>
+{% elif fav.average_rating == 5 or product.average_rating == 5 %}
+<div class="d-flex flex-row">
+    <div class="comment-stars fav-stars-bottom-right align-items-center justify-content-center"> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> </div>
+</div>
+{% else %}
+<div class="d-flex flex-row">
+    <div class="comment-stars fav-stars-bottom-right align-items-center justify-content-center"> <i class="fa fa-star grey"></i><i class="fa fa-star grey"></i><i class="fa fa-star grey"></i><i class="fa fa-star grey"></i><i class="fa fa-star grey"></i> </div>
+</div>
+{% endif %}

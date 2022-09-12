@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load static %}
+{% load daguerre %}
+
+{% block page_header %}
+    <div class="container header-container">
+        <div class="row">
+            <div class="col"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="">
+    <div class="row">
+  <div class="card col-md-8">
+            <div class="row">
+                 <div class="col-lg-10 mx-auto mb-4">
+                    <div class="section-title career-title-h2 text-center ">
+                        <h2 class="top-c-sep">Grow your career with us</h2>
+                        <br>
+                        {% if current_categories %}
+                        {% for cat in current_categories %}
+                        <h3 class="top-c-sep">{{cat}} jobs</h3>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+              <div class="container-fluid">
+                <div class="col-lg-12 mx-auto">
+                    <div class="career-search mb-60">
+                        <div class="filter-result">
+                          {% if current_categories %}
+                          {% for cat in current_categories %}
+                            <p class="mb-30 ff-montserrat">Total Job Openings In This Category: {{cat.job_opportunity.count}}</p>
+                            {% endfor %}
+                          {% else %}
+                            <p class="mb-30 ff-montserrat">Total Job Openings : {{jobs.count}}</p>
+                            {% endif %}
+
+
+                              {% for job in jobs %}
+                            <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
+                                <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
+                                    <div class="img-holder mr-md-4 mb-md-0 mb-4 mx-auto mx-md-0 d-md-none d-lg-flex">
+                                        {{job.name|slice:"0:2"|upper}}
+                                    </div>
+                                    <div class="job-content">
+                                        <h5 class="text-center text-md-left">{{job.name}}</h5>
+                                        <ul class="d-md-flex job-det flex-wrap text-capitalize ff-open-sans">
+                                            <li class="mr-md-4">
+                                                <i class="fa fa-map-marker mr-2"></i> {{job.location}}
+                                            </li>
+                                            <li class="mr-md-4">
+                                                <i class="fa fa-usd mr-2"></i> {{job.pay}}/pm
+                                            </li>
+                                            <li class="mr-md-4">
+                                                <i class="fa fa-clock-o mr-2"></i> {{job.time}}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="job-right my-4 flex-shrink-0">
+                                    <a href="{{job.get_absolute_url}}" class="btn d-block w-100 d-sm-inline-block btn-light">Apply now</a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                </div>
+            </div>
+            </div>
+        </div>
+
+
+        </div>
+        </div>
+        <div class="col-md-4">
+          <!-- widget Tags -->
+          <div class="widget widget-tags card">
+            {% if current_categories %}
+              <div class="section-title text-center mb-2">
+                  <h3>Other Categories</h3>
+              </div>
+              {% else %}
+              <div class="section-title text-center mb-2">
+                  <h3>All Categories</h3>
+              </div>
+              {% endif %}
+              <div class="widget-body">
+                  <div class="nav tag-cloud">
+                    {% for category in all_categories %}
+                      <a href="{% url 'careers' %}?category={{category}}">{{category.name}}</a>
+                    {% endfor %}
+                  </div>
+              </div>
+          </div>
+          <!-- End widget Tags -->
+        </div>
+        </div>
+        </div>
+        </div>
+
+{% endblock %}

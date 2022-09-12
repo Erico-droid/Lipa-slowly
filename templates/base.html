@@ -1,0 +1,420 @@
+{% load static %}
+{% load daguerre %}
+
+<!doctype html>
+<html lang="en">
+<head>
+
+  {% block meta %}
+  {% if current_url == "product_detail" %}
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="title" content="{{meta_product_name}}">
+  <meta name="description" content="{{meta_product_description}}">
+  <meta name="keywords" content="{% for subcategory in base_subcategories %}{{subcategory.name}},{% endfor %}{% for product in base_products %}{{product.name}},{% endfor %},sale,buy now pay later, buy in full amount, {{site_country}}">
+  <meta name="revisit-after" content="1 days">
+  <meta name="robots" content="index, follow">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="language" content="English">
+  {% else %}
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="title" content="{{meta_name}}">
+  <meta name="description" content="{{meta_description}}">
+  <meta name="keywords" content="{% for subcategory in base_subcategories %}{{subcategory.name}},{% endfor %}{% for product in base_products %}{{product.name}},{% endfor %},sale,buy now pay later, buy in full amount, {{site_country}}">
+  <meta name="revisit-after" content="1 days">
+  <meta name="robots" content="index, follow">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="language" content="English">
+  {% endif %}
+  {% endblock %}
+  {% block extra_meta %}
+  {% endblock %}
+
+  {% block corecss %}
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri&family=Roboto:wght@300&family=Waterfall&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/slicarousel.css' %}?{% now " u"="" %}"="">
+  <link rel="stylesheet" href="{% static 'css/sidebar.css' %}?{% now " u"="" %}"=""><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/kenwheeler/slick@1.8.1/slick/slick-theme.css"/>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/kenwheeler/slick@1.8.1/slick/slick-theme.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}?{% now " u"="" %}"="">
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.css"> -->
+  {% endblock %}
+
+  {% block extra_css %}
+  {% endblock %}
+
+  {% block corejs %}
+  <script src="{% static 'js/fontawesome.js' %}"></script>
+  <!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> -->
+  <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+  <script src="{% static 'js/popper.min.js' %}" ></script>
+  <script src="{% static 'js/slicarousel.js' %}" ></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="https://js.stripe.com/v3/"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+  {% endblock %}
+
+  {% block extra_js %}
+  {% endblock %}
+
+  <title class="title"> {{site_name}}{% block extra_title %}{{page_detail}}{% endblock %}</title>
+</head>
+<body onload="window.addEventListener('resize', setPanels); setPanels();">
+  <header class="fixed-top color-bkgrd">
+    <div id="topnav" class="container-fluid row d-none d-lg-flex">
+      <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 text-center text-lg-left">
+        <a href="{% url 'home' %}" class="nav-link main-logo-link">
+          <h2 class="logo-font logo text-black my-0"><strong><b>{{site_name}}</b></strong></h2>
+        </a>
+      </div>
+      <div class="col-12 col-lg-4 my-auto py-1 py-lg-0">
+        <form method="GET" action="{% url 'products' %}">
+          <div class="input-group w-100">
+            <input class="form-control border border-black rounded-0" type="text" name="q" placeholder="Search our site">
+            <div class="input-group-append">
+              <button class="form-control btn btn-black border border-black rounded-0" type="submit">
+                <span class="icon">
+                  <i class="fas fa-search"></i>
+                </span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-12 col-lg-4 my-auto py-1 py-lg-0">
+        <ul class="list-inline list-unstyled text-center text-lg-right my-0">
+          {% if request.user.is_authenticated %}
+          {% if favourites %}
+          <li class="list-inline-item">
+            <a class="text-info font-weight-bold text-black nav-link" data-toggle="modal" data-target="#exampleModalLong">
+              <div class="text-center">
+                <div><i class="fa fa-heart love-fav" aria-hidden="true"></i></div>
+                <p class="my-0">
+                  {{favourites.count}} Favourites
+                </p>
+              </div>
+            </a>
+          </li>
+          {% else %}<li class="list-inline-item">
+            <a class="text-info text-black nav-link" onclick="Nofav()">
+              <div class="text-center">
+                <div><i class="fa fa-heart love-fav" aria-hidden="true"></i></div>
+                <p class="my-0">
+                  No Favourites
+                </p>
+              </div>
+            </a>
+          </li>
+          {% endif %}
+          {% else %}
+          <li class="list-inline-item">
+            <a class="text-info text-black nav-link" onclick="Loginfav()">
+              <div class="text-center">
+                <div><i class="fa fa-heart love-fav" aria-hidden="true"></i></div>
+                <p class="my-0">
+                  Favourites
+                </p>
+              </div>
+            </a>
+          </li>
+          {% endif %}
+          <div id="snackbar">There are products in your favourites list.</div>
+          <div id="snackbar-login">Login to add and observe products in your favourites.</div>
+          <li class="list-inline-item dropdown">
+            <a class="text-black nav-link" href="#" id="user-options" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <div class="text-center">
+                <div><i class="fas fa-user fa-lg"></i></div>
+                <p class="my-0">My Account</p>
+              </div>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="user-options">
+              {% if request.user.is_authenticated %}
+              {% if request.user.is_superuser %}
+              <a href="{% url 'add_product' %}" class="dropdown-item my-account">Product Management</a>
+              {% endif %}
+              <a href="{% url 'profile' %}" class="dropdown-item my-account">My Profile</a>
+              <a href="{% url 'account_logout' %}" class="dropdown-item my-account">Logout</a>
+              {% else %}
+              <a href="{% url 'account_signup' %}" class="dropdown-item my-account">Register</a>
+              <a href="{% url 'account_login' %}" class="dropdown-item my-account">Login</a>
+              {% endif %}
+            </div>
+          </li>
+          <li class="list-inline-item">
+            <a class="{% if grand_total %}text-info font-weight-bold{% else %}text-black{% endif %} nav-link" href="{% url 'view_bag' %}">
+              <div class="text-center">
+                <div><i class="fas fa-shopping-bag fa-lg"></i></div>
+                <p class="my-0">
+                  {% if grand_total %}
+                  ksh{{ grand_total|floatformat:2 }}
+                  {% else %}
+                  ksh0.00
+                  {% endif %}
+                </p>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="nav-cont">
+    </div>
+    <div class="row">
+      <nav class="navbar navbar-expand-lg navbar-light w-100">
+        <a href="#menu-toggle" id="menu-toggle" class="navbar-brand">
+          <button class="navbar-toggler" type="button" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample02" aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation" >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </a>
+        {% include 'includes/mobile-top-header.html' %}
+        {% include 'includes/main-nav.html' %}
+      </nav>
+    </div>
+    <div class="container">
+      <div class="nav-cont">
+      </div>
+    </div>
+    <div id="delivery-banner" class="row text-center">
+      <div class="col banner">
+        <h6 class="my-1">Free delivery on orders over ksh{{ free_delivery_threshold }}!</h6>
+      </div>
+    </div>
+  </header>
+  {% if messages %}
+  <div class="message-container">
+    {% for message in messages %}
+    {% with message.level as level %}
+    {% if level == 40 %}
+    {% include 'includes/toasts/toast_error.html' %}
+    {% elif level == 30 %}
+    {% include 'includes/toasts/toast_warning.html' %}
+    {% elif level == 25 %}
+    {% include 'includes/toasts/toast_success.html' %}
+    {% else %}
+    {% include 'includes/toasts/toast_info.html' %}
+    {% endif %}
+    {% endwith %}
+    {% endfor %}
+  </div>
+  {% endif %}
+  <!-- Modal -->
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    <div class="modal-content">
+      <div class="modal-body">
+              <div class="favourites-h2">
+                <h2>Favourites</h2>
+              </div>
+        <div class="row">
+          <div class="col-lg-10 mx-auto">
+            <!-- List group-->
+            <ul class="list-group">
+              <!-- list group item-->
+              {% for fav in favourites %}
+              <li class="list-group-item border-0 border-bottom-1">
+                <!-- Custom content-->
+                <div class="media align-items-lg-center flex-column flex-lg-row fav-block">
+                  <div class="media-body order-2 order-lg-1">
+                    <h5 class="mt-0 font-weight-bold mb-2">{{fav.name}}</h5>
+                    <div class="d-flex align-items-center justify-content-between mt-1">
+                      <h6 class="font-weight-bold my-2">ksh {{fav.price}}</h6>
+                      <ul class="list-inline small">
+                        {% include 'products/includes/fav-small-rating.html' %}
+                      </ul>
+                    </div>
+                    <div class="fav-btn">
+                        <a href="{{fav.get_absolute_url}}" class = "fav_btn_btn">Revisit {{fav.name}}</a>
+                    </div>
+                  </div>
+                  {% adjust fav.image 'fit' width=800 height=800 as image %}
+                  <img src="{{image}}" alt="{{fav.name}}" class="ml-lg-5 order-1 order-lg-2">
+                </div> <!-- End -->
+              </li> <!-- End -->
+              {% endfor %}
+              <!-- list group item-->
+            </ul> <!-- End -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  {% block page_header %}
+  {% endblock %}
+
+  {% block content %}
+  {% endblock %}
+
+  <footer id="footer" class="footer-1 mt-2">
+    <div class="more-footer text-left">
+      <div class="row">
+        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3 more-footer-tab">
+          <h6>No Hidden Fees</h6>
+          <p>The price you see, is the price you pay!</p>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3 more-footer-tab">
+          <h6>No Credit Checks</h6>
+          <p>No Credit Checks performed at all!</p>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3 more-footer-tab">
+          <h6>100% Acceptance Rate*</h6>
+          <p>We have 100% customer acceptance rate*. See T&C’s for further info!</p>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3 more-footer-tab">
+          <h6>Huge Range of Products</h6>
+          <p>We are always adding the latest products & ranges!</p>
+        </div>
+      </div>
+    </div>
+    <div class="main-footer widgets-dark typo-light">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="widget subscribe no-box">
+              <h5 class="widget-title">{{site_name}}<span></span></h5>
+              <p>{{site_tagline}}</p>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="widget no-box">
+              <h5 class="widget-title">Useful Links<span></span></h5>
+              <ul class="thumbnail-widget">
+                <li>
+                  <div class="thumb-content"><i class="fa fa-chevron-right chright-foot"></i><a href="#.">Get Started</a></div>
+                </li>
+                <li>
+                  <div class="thumb-content"><i class="fa fa-chevron-right chright-foot"></i><a href="#.">Top Leaders</a></div>
+                </li>
+                <li>
+                  <div class="thumb-content"><i class="fa fa-chevron-right chright-foot"></i><a href="#.">Success Stories</a></div>
+                </li>
+                <li>
+                  <div class="thumb-content"><i class="fa fa-chevron-right chright-foot"></i><a href="#.">Event/Tickets</a></div>
+                </li>
+                <li>
+                  <div class="thumb-content"><i class="fa fa-chevron-right chright-foot"></i><a href="#.">News</a></div>
+                </li>
+                <li>
+                  <div class="thumb-content"><i class="fa fa-chevron-right chright-foot"></i><a href="#.">Lifestyle</a></div>
+                </li>
+                <li>
+                  <div class="thumb-content"><i class="fa fa-chevron-right chright-foot"></i><a href="#.">About</a></div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="widget no-box">
+              <h5 class="widget-title">Shop for<span></span></h5>
+              <ul class="thumbnail-widget">
+                {% for category in base_categories %}
+                <li><div class="thumb-content"><i class="fa fa-chevron-right chright-foot"></i><a href="{% url 'products' %}?category={{category}}">{{category.name}}</a></div></li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-6 col-md-3 p-0">
+
+            <div class="widget no-box">
+              <h5 class="widget-title">Stay tuned<span></span></h5>
+              <span class="subscribe-text">Subscribe to our newsletter and never miss our latest deals and product updates.</span>
+              <div class="newsletter mt-3">
+                <div class="content">
+                <form class="form-inline" action = "{% url 'home' %}" method="POST">
+                  {% csrf_token %}
+                  <div class="input-group">
+                         {{email_sub_form.email}}
+                         <span class="input-group-btn">
+                         <button class="btn" type="submit"><i class="fa fa-envelope mail-subscribe"></i> </button>
+                         </span>
+                          </div>
+                      </div>
+                	</div>
+                </form>
+              </div>
+              <p class="mt-3 footer-sm-contacts"><a class="footer-sm-contacts" href="mailto:{{site_email}}" title="{{site_email}}">{{site_email}}</a></p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    <div class="footer-copyright">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <p>Copyright {{site_name}} © {% now 'Y' %}. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  {% block postloadjs %}
+  <script type="text/javascript">
+    $('.toast').toast('show');
+
+    $(function(){
+      $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+      });
+    });
+
+    function Nofav() {
+      var x = document.getElementById("snackbar");
+      x.className = "show";
+      setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+    }
+
+    function Loginfav() {
+      var x = document.getElementById("snackbar-login");
+      x.className = "show";
+      setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+    }
+
+    $(function() {
+      var AccordionMobile = function(el, multiple) {
+        this.el = el || {};
+        this.multiple = multiple || false;
+
+        // Variables privadas
+        var links = this.el.find('.link');
+        // Evento
+        links.on('click', {el: this.el, multiple: this.multiple}, this.dropdown)
+      }
+
+      AccordionMobile.prototype.dropdown = function(e) {
+        var $el = e.data.el;
+        $this = $(this),
+        $next = $this.next();
+
+        $next.slideToggle();
+        $this.parent().toggleClass('open');
+
+        if (!e.data.multiple) {
+          $el.find('.submenu').not($next).slideUp().parent().removeClass('open');
+        };
+      }
+
+      var accordion = new AccordionMobile($('#accordionMobile'), false);
+    });
+  </script>
+  {% endblock %}
+
+
+</body>
+</html>

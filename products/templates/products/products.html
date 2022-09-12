@@ -1,0 +1,286 @@
+{% extends "base.html" %}
+{% load static %}
+{% load daguerre %}
+{% load mathfilters %}
+
+{% block page_header %}
+<div class="container header-container">
+  <div class="row">
+    <div class="col"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="overlay"></div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs-12">
+      <div class="card">
+        <div class="row">
+          <div class="col text-center mt-3">
+            {% if current_categories %}
+            {% for c in current_categories %}
+            <span class="p-2 mt-2 mb-2 badge badge-white text-black lebz">{{ c.name }}</span>
+            {% endfor %}
+            {% elif current_subcategories %}
+            {% for c in current_subcategories %}
+            {% if current_subcategories.count > 1 %}
+            {% else %}
+            <span class="p-2 mt-2 mb-2 badge badge-white text-black lebz">{{ c.name }}</span>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            {% if current_brands %}
+            {% for brand in current_brands %}
+            <span class="p-2 mt-2 mb-2 badge badge-white text-black lebz">{{brand|capfirst}} - {{brand.slogan|capfirst}}</span>
+            {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+        <div class="row">
+          <div class="product-container col-10 offset-1">
+            <div class="mt-1 mb-2">
+              <div class="col-12 pl-0 pr-0 my-auto order-md-last d-flex justify-content-center justify-content-md-end">
+                {% if current_categories %}
+                {% else %}
+                <div class="sort-select-wrapper w-100">
+                  <select id="sort-selector" class="custom-select sorting-custom-select custom-select-sm rounded-0 border border-{% if current_sorting != 'None_None' %}info{% else %}black{% endif %}">
+                    <option value="reset" {% if current_sorting == 'None_None' %}selected{% endif %}>Sort by...</option>
+                    <option value="price_asc" {% if current_sorting == 'price_asc' %}selected{% endif %}>Price (low to high)</option>
+                    <option value="price_desc" {% if current_sorting == 'price_desc' %}selected{% endif %}>Price (high to low)</option>
+                    <option value="name_asc" {% if current_sorting == 'name_asc' %}selected{% endif %}>Name (A-Z)</option>
+                    <option value="name_desc" {% if current_sorting == 'name_desc' %}selected{% endif %}>Name (Z-A)</option>
+                    <option value="subcategory_asc" {% if current_sorting == 'subcategory_asc' %}selected{% endif %}>category (A-Z)</option>
+                    <option value="subcategory_desc" {% if current_sorting == 'subcategory_desc' %}selected{% endif %}>category (Z-A)</option>
+                  </select>
+                </div>
+                {% endif %}
+              </div>
+              <div class="col-12 order-md-first">
+                <p class="text-bold mt-3 text-center informative">
+                  {% if search_term or current_categories or current_sorting != 'None_None' %}
+                  <span class="small"><a href="{% url 'products' %}">Products Home</a> | </span>
+                  {% endif %}
+                  <span class="small">{{ products|length }} {% if products|length == 1 %}{% if current_categories %}Subcategory{% else %}Product{% endif %}{% else %}{% if current_categories %}Subcategories{% else %}Products{% endif %}{% endif %}{% if search_term %} found for <strong>"{{ search_term }}"</strong>{% endif %}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card accord-ion">
+          <ul id="accordion" class="accordion container-fluid">
+            {% for brand in brands %}
+            <a href="{% url 'products' %}?brand={{brand.name}}">
+            <li>
+              <div class="link"><img src="{{brand.logo.url}}" loading="lazy" alt="brand.name" class="pr-3">{{brand.name|capfirst}}<i class="fa fa-chevron-right"></i></div>
+            </li>
+            </a>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-xl-9 col-lg-9 col-md-8 col-sm-12 col-xs-12">
+        <div class="row">
+          {% if current_categories %}
+          {% for category in current_categories %}
+          <div class="container-fluid pl-lg-0 pl-md-1 pl-xl-0 pl-sm-1 pl-xs-1">
+              <div class="card">
+                <div class="cat_div_img" style = "min-height: 320px;background-image: url(../media/{{category.image}});background-color: rgba(0,0,0,0.5);z-index: 2;cursor: pointer;background-size: 100% 100%;background-repeat: no-repeat;background-blend-mode: hard-light;">
+                  <div class="cat_overlay">
+                  {% for brand in brand_logo %}
+                  <img src="{{brand.logo.url}}" alt="{{brand}}">
+                  {% endfor %}
+                  </div>
+              </div>
+              </div>
+          </div>
+          {% endfor %}
+          {% for category in current_categories %}
+          {% for subcategory in  category.subcategory.all %}
+          <div class="col-md-4 col-xl-3 col-lg-3 col-custom-4-sm col-custom-6-xs my-auto order-md-last d-flex justify-content-center justify-content-md-end pl-lg-0 pl-xl-0 pl-md-0">
+            <div class="card">
+              {% if subcategory.image %}
+              <a href="{% url 'products' %}?subcategory={{subcategory.name}} ">
+                <div class="products-card-fit-image text-center">
+                  {% adjust subcategory.image 'fit' width=2000 height=2000 as image %}
+                  <img class="card-img-top img-fluid" loading="lazy" src="{{ image }}" alt="{{ subcategory.name }}">
+                </div>
+              </a>
+              {% else %}
+              <a href="{% url 'products' %}?subcategory={{subcategory.name}} ">
+                <div class="image-container">
+                  <img class="card-img-top img-fluid" src="{{ MEDIA_URL }}noimage.png" alt="{{ subcategory.name }}">
+                </div>
+              </a>
+              {% endif %}
+
+              <div class="category-detail-container p-2 text-center">
+                <div class="d-flex justify-content-between align-items-center">
+                  <p class="dress-name mb-0">{{ subcategory.name }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          {% endfor %}
+          {% else %}
+          {% if current_brands %}
+          {% for brand in current_brands %}
+          <div class="container-fluid pl-lg-0 pl-md-1 pl-xl-0 pl-sm-1 pl-xs-1">
+              <div class="card">
+                <div class="brand_div_img" id="brand_div_img" style = "min-height: 320px;background-image: url(../media/{{brand.main_image}});background-color: rgba(0,0,0,0.5);z-index: 2;cursor: pointer;background-size: 100% 100%;background-repeat: no-repeat">
+                  <div class="brand_overlay">
+                    <div class="brand_topper">
+                      <img src="{{brand.logo.url}}" alt="{{brand}} logo">
+                    </div>
+                  </div>
+              </div>
+              </div>
+          </div>
+          {% endfor %}
+          {% endif %}
+          {% for product in products %}
+          {% if product.name %}
+          <div class="col-md-6 col-xl-3 col-lg-4 col-custom-4-sm col-custom-6-xs my-auto order-md-last d-flex justify-content-center justify-content-md-end pl-lg-0 pl-xl-0 pl-md-0">
+            <div class="card">
+              <a href="{{product.get_absolute_url}}">
+                <div class="products-card-fit-image  text-center">
+                  <div class="first">
+                    <div class="d-flex justify-content-between align-items-center"><span class="wishlist"><i class="fa fa-heart-o"></i><strong class = "likes">{{product.likes.count}}</strong></span> </div>
+                  </div>
+                  {% adjust product.image 'fit' width=2000 height=2000 as image %}
+                  <img class="card-img-top img-fluid" loading="lazy" src="{{ image }}" alt="{{ product.name }}">
+                </div>
+              </a>
+
+              <div class="product-detail-container p-2">
+                <div class="d-flex justify-content-between align-items-center">
+                  <p class="dress-name">{{ product.name }}</p>
+                </div>
+                {% if product.subcategory %}
+                <div class="d-flex justify-content-between">
+                  <div class="color-select d-flex ">
+                    <p class="dress-category mb-0" title="{% for cat in product.subcategory.all %}{% if forloop.last %}{{cat}}{% else %}{{cat}}, {% endif %}{% endfor %}">
+                      {% if product.subcategory.count > 1 %}
+                      <b>categories:</b>
+                      {% else %}
+                      <b>category:</b>
+                      {% endif %}
+                      {% for cat in product.subcategory.all %}
+                      {% if forloop.last %}
+                      <a href="{% url 'products' %}?subcategory={{cat.name}}">{{cat.friendly_name}}</a>
+                      {% else %}
+                      <a href="{% url 'products' %}?subcategory={{cat.name}}">{{cat.friendly_name}}</a>,
+                      {% endif %}
+                      {% endfor %}
+                    </p>
+                  </div>
+                  <div class="d-flex "> <span class="new-price">ksh{{ product.price }}</span> </div>
+                </div>
+                {% endif %}
+                <div class="d-flex justify-content-between align-items-center pt-1">
+                  {% include 'products/includes/small-rating.html' %}
+
+                  <div><span class="rating-number">{% if product.comments.count == 1 %}{{product.comments.count}} review{% elif product.comments.count == 0 %}No reviews{% else %}{{product.comments.count}} reviews{% endif %}</span> </div>
+                </div>
+                <div class="admin-section-card justify-content-between align-items-center mt-5">
+
+                  </div>
+                </div>
+
+                {% if request.user.is_superuser %}
+                <div class="editor-board">
+                  <div class="container-fluid">
+                    <small class="edit-delete">
+                      <a href="{% url 'edit_product' product.id %}">Edit</a> |
+                      <a class="text-danger" href="{% url 'delete_product' product.id %}">Delete</a>
+                    </small>
+                  </div></div>
+                  {% endif %}
+              </div>
+            </div>
+            {% elif product.ad and current_brands %}
+          </div>
+          <a href="{{product.product.get_absolute_url}}">
+          <div class="ad-card-div card">
+            <img src="{{product.image_one.url}}" alt="{{product}}">
+          </div>
+          </a>
+          <div class="row">
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="btt-button shadow-sm rounded-0 border border-black">
+      <a class="btt-link d-flex h-100">
+        <i class="fas fa-arrow-up text-black mx-auto my-auto"></i>
+      </a>
+    </div>
+    {% endblock %}
+
+    {% block postloadjs %}
+    {{ block.super }}
+    <script type="text/javascript">
+      $('.btt-link').click(function(e) {
+        window.scrollTo(0,0)
+      })
+    </script>
+
+    <script type="text/javascript">
+      $('#sort-selector').change(function() {
+        var selector = $(this);
+        var currentUrl = new URL(window.location);
+
+        var selectedVal = selector.val();
+        if(selectedVal != "reset"){
+          var sort = selectedVal.split("_")[0];
+          var direction = selectedVal.split("_")[1];
+
+          currentUrl.searchParams.set("sort", sort);
+          currentUrl.searchParams.set("direction", direction);
+
+          window.location.replace(currentUrl);
+        } else {
+          currentUrl.searchParams.delete("sort");
+          currentUrl.searchParams.delete("direction");
+
+          window.location.replace(currentUrl);
+        }
+      })
+
+      $(function() {
+        var Accordion = function(el, multiple) {
+          this.el = el || {};
+          this.multiple = multiple || false;
+
+          // Variables privadas
+          var links = this.el.find('.link');
+          // Evento
+          links.on('click', {el: this.el, multiple: this.multiple}, this.dropdown)
+        }
+
+        Accordion.prototype.dropdown = function(e) {
+          var $el = e.data.el;
+          $this = $(this),
+          $next = $this.next();
+
+          $next.slideToggle();
+          $this.parent().toggleClass('open');
+
+          if (!e.data.multiple) {
+            $el.find('.submenu').not($next).slideUp().parent().removeClass('open');
+          };
+        }
+
+        var accordion = new Accordion($('#accordion'), false);
+      });
+    </script>
+    {% endblock %}

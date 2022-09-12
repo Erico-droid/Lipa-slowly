@@ -1,0 +1,529 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% load daguerre %}
+
+{% block page_header %}
+    <div class="container header-container">
+        <div class="row">
+            <div class="col"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="landing-card card main-landing-area">
+        <div class="the_slider">
+          <div class="s_slider_container"></div>
+            <div class="landing-container-scroll pb-1">
+        <div class="landing-container container-fluid text-center">
+          <div class="row">
+          <div class="col-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3">
+            <div class="landing-card2 card">
+                <div class="card-image">
+                        <img src="https://i.imgur.com/jqfPp3X.png" width="250">
+                </div>
+                <div class="landing-card-inner">
+                    <span>Groceries</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3 pl-0">
+              <div class="landing-card2 card">
+                  <div class="row">
+                    {% for display in display_category %}
+                      <div class="col-custom-6">
+                        <a href="{% url 'products' %}?subcategory={{display.name}}">
+                        <div class="card-image-sm">
+                        {% adjust display.image 'fit' width=1600 height=1600 as image %}
+                        <img src="{{image}}">
+                        <span><b>{{display.name}}</b></span>
+                      </div>
+                      </a>
+                      </div>
+                    {% endfor %}
+                  </div>
+                  </div>
+              </div>
+              <div class="col-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3 pl-0">
+                <div class="landing-card2 card">
+                  <div id="mycarousel" class="carousel slide" data-ride="carousel" data-interval="5000">
+                        <div class="carousel-inner">
+                          {% for p_image in display_products_all %}
+                          <a href="{{p_image.get_absolute_url}}" title = "{{p_image}}">
+                        <div class="carousel-item carousel-item-cat  {% if forloop.first %}active{% else %}{% endif %}">
+                          {% adjust p_image.image 'fit' width=1600 height=1600 as image %}
+                            <img src="{{image}}" class="d-block w-100" alt="{{p_image.name}}">
+                        </div>
+                        </a>
+                           {% endfor %}
+                        </div>
+                        <div class="landing-card-inner">
+                            <span>{{sub}}</span>
+                            </div>
+                    </div>
+                </div>
+                </div>
+                <div class="col-3 col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3 pl-0">
+                  <div class="col-12 pl-0 pr-0">
+                  <div class="landing-card2 card">
+                      <div class="card-image-adv">
+                        <div class="">
+                          <div id="mycarousel" class="carousel slide" data-ride="carousel" data-interval="5000">
+                                <div class="carousel-inner">
+                                  {% for m_image in marketing_image %}
+                                <div class="carousel-item {% if forloop.first %}active{% else %}{% endif %}">
+                                  {% adjust m_image.marketing_image 'fit' width=1600 height=1600 as image %}
+                                    <img src="{{image}}" class="d-block w-100" alt="{{m_image.name}}">
+                                </div>
+                                {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                      </div>
+                    </div>
+                    <div class="col-12 pl-0 pr-0">
+                    <div class="landing-card2 card">
+                        <div class="landing-card-inner card-sign-in-adv">
+                          <div class="sign-in-experience-text">
+                            <p>Sign in for the best experience</p>
+                          </div>
+                          <a href="{% url 'account_login' %}">
+                              <span class="btn-black pr-2 pl-1 pt-2 pb-2">Sign in securely</span>
+                              <span class="icon">
+                                  <i class="fas fa-lock"></i>
+                              </span>
+                              </a>
+                            </div>
+                        </div>
+                      </div>
+                  </div>
+            </div>
+       </div>
+     </div>
+      </div>
+    </div>
+
+    <div class="card">
+    <div class="">
+      <div id="mycarousel" class="carousel slide" data-ride="carousel" data-interval="10000">
+            <ol class="carousel-indicators">
+            <li data-target="#mycarousel" data-slide-to="0"  class="active"></li>
+            <li data-target="#mycarousel" data-slide-to="1"></li>
+            <li data-target="#mycarousel" data-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner">
+            <div class="carousel-item car-item active">
+                <img src="https://copia.co.ke/wp-content/uploads/2021/08/COPIA-PESA-BANNER.jpeg" class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item car-item">
+                <img src="https://copia.co.ke/wp-content/uploads/2021/08/LPP-Home-Page-Banner-1536x319.png" class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item car-item">
+                <img src="https://copia.co.ke/wp-content/uploads/2021/08/LPP-Home-Page-Banner-1536x319.png" class="d-block w-100" alt="...">
+            </div>
+            </div>
+            <a class="carousel-control-prev" href="#mycarousel" role="button" data-slide="prev">
+                <div class="banner-icons">
+                    <span class="fas fa-angle-left"></span>
+                </div>
+            <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#mycarousel" role="button" data-slide="next">
+                <div class="banner-icons">
+                    <span class="fas fa-angle-right"></span>
+                </div>
+            <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+  </div>
+
+  <div class="categories-container-scroll small-screens-container" id="categories-container-scroll">
+    <div class="categories-container">
+      <div class="row">
+    {% for subcategory in base_subcategories %}
+    <div class="super-category-card pl-2 my-auto">
+    <div class="category-card card">
+      <div class="my-auto order-md-last d-flex justify-content-center justify-content-md-end pl-lg-0 pl-xl-0 pl-md-0">
+        <div class="card">
+          {% if subcategory.image %}
+          <a href="{% url 'products' %}?subcategory={{subcategory.name}} ">
+            <div class="products-card-fit-image text-center">
+              {% adjust subcategory.image 'fit' width=2000 height=2000 as image %}
+              <img class="card-img-top img-fluid" loading="lazy" src="{{ image }}" alt="{{ subcategory.name }}">
+            </div>
+          </a>
+          {% else %}
+          <a href="{% url 'products' %}?subcategory={{subcategory.name}} ">
+            <div class="image-container">
+              <img class="card-img-top img-fluid" src="{{ MEDIA_URL }}noimage.png" alt="{{ subcategory.name }}">
+            </div>
+          </a>
+          {% endif %}
+
+          <div class="category-detail-container p-2 text-center">
+            <div class="d-flex justify-content-between align-items-center">
+              <p class="dress-name mb-0">{{ subcategory.name }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    {% endfor %}
+    </div>
+  </div>
+</div>
+<div class="large-screens-container">
+<div class="items">
+  {% for subcategory in base_subcategories %}
+  <div class="my-auto order-md-last d-flex justify-content-center justify-content-md-end pl-lg-0 pl-xl-0 pl-md-0">
+    <div class="card">
+      {% if subcategory.image %}
+      <a href="{% url 'products' %}?subcategory={{subcategory.name}} ">
+        <div class="products-card-fit-image text-center">
+          {% adjust subcategory.image 'fit' width=2000 height=2000 as image %}
+          <img class="card-img-top img-fluid img-fluid-cat" loading="lazy" src="{{ image }}" alt="{{ subcategory.name }}">
+        </div>
+      </a>
+      {% else %}
+      <a href="{% url 'products' %}?subcategory={{subcategory.name}} ">
+        <div class="image-container">
+          <img class="card-img-top img-fluid" src="{{ MEDIA_URL }}noimage.png" alt="{{ subcategory.name }}">
+        </div>
+      </a>
+      {% endif %}
+
+      <div class="category-detail-container p-2 text-center">
+        <div class="d-flex justify-content-between align-items-center">
+          <p class="dress-name mb-0">{{ subcategory.name }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+</div>
+
+<div class="card">
+<div class="row">
+  <div class="section-heading-instructions col-md-12">
+    <h2>Trending <b>Products</b></h2>
+    <div id="myCarousel" class="carousel slide product-carousel" data-ride="carousel" data-interval="0">
+    <!-- Wrapper for carousel items -->
+    <div class="trending-container-scroll">
+    <div class="carousel-inner trending-container">
+      <div class="carousel-item active">
+        <div class="row">
+          {% for trending_product in trending_products|slice:":6" %}
+          <div class="col-custom-2-xs col-sm-2 col-md-2 col-lg-2 col-xl-2">
+            <a href="{{trending_product.get_absolute_url}}">
+            <div class="thumb-wrapper">
+              <div class="img-box">
+                {% adjust trending_product.image 'fit' width=1200 height=1200 as image %}
+                <img src="{{image}}" class="img-fluid" alt="{{trending_product.name}}">
+              </div>
+              <div class="thumb-content">
+                <h4>{{trending_product.name}}</h4>
+              </div>
+              <div class="thumb-content-price">
+                <h4>{{trending_product.price}}</h4>
+              </div>
+            </div>
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      </div>
+      </div>
+  </div>
+  </div>
+</div>
+</div>
+<div class="card card-retail">
+  <div class="supplier">
+    <h2>Check out our handy cost of living <a href="{% url }">hints and tips</a></h2>
+  </div>
+</div>
+<div class="">
+  <div class="forYou" >
+        <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="row">
+            <div class="col-custom-6-xs col-sm-12 col-md-3 col-lg-3 col-xl-3 col-sm-12">
+              <div class="card">
+                <div class="new-image">
+                  <img src="{% static 'images/home/1.png' %}" alt="">
+                </div>
+                <div class="new-text-desc">
+                  <p class="dell">Everyday Collection</p>
+                  <p class="dell-desc">For you, your family and your home at prices you'll love</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-custom-6-xs col-md-3 col-lg-3 col-xl-3 pl-lg-0 pl-md-0">
+              <div class="card">
+                <div class="new-image">
+                  <img src="{% static 'images/home/2.jpg' %}" alt="">
+                </div>
+                <div class="new-text-desc">
+                  <p class="dell">Tech Hub</p>
+                  <p class="dell-desc">With 12 months buy now pay later, you can get your latest piece of tech</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-custom-6-xs col-md-3 col-lg-3 col-xl-3 pl-lg-0 pl-md-0">
+              <div class="card">
+                <div class="new-image">
+                  <img src="{% static 'images/home/4.jpg' %}" alt="">
+                </div>
+                <div class="new-text-desc">
+                  <p class="dell">Up your home</p>
+                  <p class="dell-desc">Get your home fancy and comfy for you and your family</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-custom-6-xs col-md-3 col-lg-3 col-xl-3 pl-lg-0 pl-md-0 ">
+              <div class="card">
+                <div class="new-image">
+                  <img src="{% static 'images/home/3.jpg' %}" alt="">
+                </div>
+                <div class="new-text-desc">
+                  <p class="dell">Go out some more</p>
+                  <p class="dell-desc">We've got all your outdoor needs covered</p>
+                </div>
+              </div>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+<!-- <div class="text-center payimage">
+  <div class="container">
+    <div class="ways-to-pay text-center">
+      <img id="payoptionsImage" src="{% static '' %}" alt="">
+      <a href="#" class = "btn-find-out-more">Find out more<i class="fa fa-info-circle" aria-hidden="true"></i></a>
+      <a href="#" class = "btn-shop-now">Shop now<i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
+    </div>
+  </div>
+</div> -->
+<div class="text-center branding-s">
+  {% for brand in brand %}
+  <div class="">
+    <div class="container">
+      <!-- {% adjust brand.main_image 'fit' width=1000 height=250 as image %} -->
+      <div class="row">
+        <div class="col-md-3 section-heading-instructions text-left">
+          <h2 class="m-0">Browse your favourite brand</h2>
+          <div class="brand_logo text-center">
+            <img src="{{brand.logo.url}}" alt="">
+          </div>
+          <div class="text-center brand_div_btn">
+            <a href="{% url 'products' %}?brand={{brand.name}}" class = "brand_btn">View {{brand.name}}'s products </a>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <img src="{{brand.main_image.url}}" class = "brand_ad_image" alt="{{brand.name}} major advert">
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+<div class="categories-container-scroll small-screens-container" id="categories-container-scroll">
+  <div class="categories-container">
+    <div class="row">
+  {% for brand in every_brand %}
+  <div class="super-category-card pl-2 my-auto">
+  <div class="category-card card">
+    <div class="my-auto order-md-last d-flex justify-content-center justify-content-md-end pl-lg-0 pl-xl-0 pl-md-0">
+      <div class="card">
+        {% if brand.logo %}
+        <a href="{% url 'products' %}?subcategory={{subcategory.name}} ">
+          <div class="products-card-fit-image text-center">
+            {% adjust brand.logo 'fit' width=2000 height=2000 as image %}
+            <img class="card-img-top img-fluid" loading="lazy" src="{{ image }}" alt="{{ brand.name }}">
+          </div>
+        </a>
+        {% else %}
+        <a href="{% url 'products' %}?subcategory={{subcategory.name}} ">
+          <div class="image-container">
+            <img class="card-img-top img-fluid" src="{{ MEDIA_URL }}noimage.png" alt="{{ brand.name }}">
+          </div>
+        </a>
+        {% endif %}
+
+        <div class="category-detail-container p-2 text-center">
+          <div class="d-flex justify-content-between align-items-center">
+            <p class="dress-name mb-0">{{brand.name}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  {% endfor %}
+  </div>
+</div>
+</div>
+<div class="large-screens-container">
+<div class="items2">
+{% for brand in every_brand %}
+<div class="my-auto order-md-last d-flex justify-content-center justify-content-md-end pl-lg-0 pl-xl-0 pl-md-0">
+  <div class="card">
+    {% if brand.logo %}
+    <a href="{% url 'products' %}?brand={{brand.name}} ">
+      <div class="products-card-fit-image-brand text-center">
+        {% adjust brand.logo 'fit' width=2000 height=2000 as image %}
+        <img class="card-img-top img-fluid img-fluid-cat" loading="lazy" src="{{ image }}" alt="{{ brand.name }}">
+      </div>
+    </a>
+    {% else %}
+    <a href="{% url 'products' %}?subcategory={{subcategory.name}} ">
+      <div class="image-container">
+        <img class="card-img-top img-fluid" src="{{ MEDIA_URL }}noimage.png" alt="{{ brand.name }}">
+      </div>
+    </a>
+    {% endif %}
+
+    <div class="category-detail-container pb-2 text-center">
+      <div class="d-flex justify-content-between align-items-center">
+        <p class="dress-name mb-0">{{ brand.name }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+</div>
+</div>
+<div class="">
+  <div class="crazyDeals" >
+        <div class="carousel-inner">
+        <div class="carousel-item car-item active">
+          <div class="row">
+            <div class="col-xs-6 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+              <div class="card crazy-deal-card">
+                <img src="{% static 'images/apple/applemac.png' %}" alt="">
+              </div>
+            </div>
+            <div class="col-xs-6 col-sm-12 col-md-6 col-lg-6 col-xl-6 pl-xl-0 pl-lg-0 pl-md-0">
+              <div class="card crazy-deal-card">
+                <img src="{% static 'images/sony/sonyps5.png' %}" alt="">
+              </div>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+<div class="card lipia-pole-pole-instructions">
+  <div class="">
+    <div class="row h-100">
+      <div class="job-mock-up col align-items-center justify-content-center col-12 col-xl-7 col-lg-7 col-md-7 col-sm-7 col-xs-7 my-auto">
+        <img src="{% static 'images/careers.jpg' %}" alt="careers">
+      </div>
+        <div class="col align-items-center justify-content-center col-12 col-xl-5 col-lg-5 col-md-5 col-sm-5 col-custom-5 my-auto">
+          <div class="job-ad section-heading-instructions w-100 text-justify">
+            <h2>We are hiring</h2>
+            <p>Join one of the fast-growing companies in Africa, transforming access to essential goods and services . At {{site_name}}, the best ideas win and every team member is an owner.</p>
+            <div class="fav-btn job-btn text-center">
+                <a href="{% url 'careers' %}" class = "fav_btn_btn">View job openings</a>
+            </div>
+          </div>
+        </div>
+    </div>
+    </div>
+</div>
+    <div class="row">
+        <div class="col-md-5">
+            <div class="card footer-cards p-1 mb-2">
+                <div class="mt-1">
+                  <a href="{% url 'privacypolicy' %}">
+                    <div class="mt-1">
+                        <div class="mt-2 mb-2 legal"><img src="{% static 'images/privacy-policy.png' %}" alt=""><span class="text1">Privacy Policy</span><i class="fa fa-chevron-right chright"></i></div>
+                    </div>
+                    </a>
+                </div>
+            </div>
+            <div class="card footer-cards p-1 mb-2">
+                <div class="mt-1">
+                  <a href="{% url 'termsandconditions' %}">
+                    <div class="mt-1">
+                        <div class="mt-2 mb-2 legal"><img src="{% static 'images/terms-and-conditions.png' %}" alt=""><span class="text1">Terms and conditions(T&C)</span><i class="fa fa-chevron-right chright"></i></div>
+                    </div>
+                    </a>
+                </div>
+            </div>
+            <div class="card footer-cards p-1 mb-2">
+                <div class="mt-1">
+                  <a href="{% url 'frequentlyaskedquestions' %}">
+                    <div class="mt-1">
+                        <div class="mt-2 mb-2 legal"><img src="{% static 'images/information-icon.png' %}" alt=""><span class="text1">Freqently Asked Questions(FAQ)</span><i class="fa fa-chevron-right chright"></i></div>
+                    </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7 pl-lg-0 pl-xl-0 pl-md-0">
+            <div class="card footer-cards text-center p-2">
+              <img src="" id="helpImage" alt="">
+            </div>
+        </div>
+    </div>
+</div>
+  <script type="text/javascript">
+    	$(document).ready(function(){
+
+    	   $(".the_slider").slicarousel();
+
+    	});
+
+      $(document).ready(function(){
+      $('.items').slick({
+      infinite: false,
+      lazyLoad: 'ondemand',
+      slidesToShow: 5,
+      slidesToScroll: 3
+    });
+
+    });
+
+    $(document).ready(function(){
+    $('.items2').slick({
+    infinite: false,
+    lazyLoad: 'ondemand',
+    slidesToShow: 8,
+    slidesToScroll: 3
+  });
+
+  });
+
+
+    function setPanels()
+    {
+      var windowWidth = window.innerWidth;
+      if(windowWidth <= 767)
+      {
+        document.getElementById('helpImage').src = "{% static 'images/home/5.png' %}";
+        document.getElementById('payoptionsImage').src = "{% static 'images/home/payoptions-mobile.png' %}";
+      }
+      else
+      {
+        document.getElementById('payoptionsImage').src = "{% static 'images/home/payoptions.png' %}";
+        document.getElementById('helpImage').src = "{% static 'images/home/7.png' %}";
+      }
+    }
+
+    var slickNext = document.getElementsByClassName('slick-next')
+
+    $( document ).ready(function() {
+      slickNext.setAttribute('id', 'slickNextID')
+      console.log(slickNext)
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% load daguerre %}
+{% if item.product.image %}
+{% adjust item.product.image 'fit' width=100 height=100 as image %}
+<img class="img-fluid rounded" src="{{ image }}" alt="{{ item.product.name }}">
+{% else %}
+<img class="img-fluid rounded" src="{{ MEDIA_URL }}noimage.png" width=100 height=100 alt="{{ item.product.name }}">
+{% endif %}

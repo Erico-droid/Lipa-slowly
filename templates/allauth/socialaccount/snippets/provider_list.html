@@ -1,0 +1,54 @@
+{% load socialaccount %}
+
+{% load static %}
+
+{% get_providers as socialaccount_providers %}
+
+{% for provider in socialaccount_providers %}
+{% if provider.id == "openid" %}
+{% for brand in provider.get_brands %}
+<li>
+  <a title="{{brand.name}}"
+     class="socialaccount_provider {{provider.id}} {{brand.id}}"
+     href="{% provider_login_url provider.id openid=brand.openid_url process=process %}"
+     >{{brand.name}}</a>
+</li>
+{% endfor %}
+{% endif %}
+<li>
+  {% if provider.name == "Facebook" %}
+  <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}}"
+ href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+  <div class="facebook-social-account">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="social-provider-logo my-auto col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2">
+          <img src="{% static 'images/facebookLogin.png' %}" alt="">
+        </div>
+        <div class="social-provider-name my-auto col-xl-10 col-lg-10 col-md-10 col-sm-10 col-xs-10">
+      <span>Login with {{provider.name}}</span>
+     </div>
+     </div>
+   </div>
+   </div>
+   </a>
+   {% endif %}
+   {% if provider.name == "Google" %}
+ <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}}"
+href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+   <div class="google-social-account">
+     <div class="container-fluid">
+       <div class="row">
+         <div  class="social-provider-logo my-auto col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2">
+           <img src="{% static 'images/googleLogin.png' %}" width = "15px" alt="">
+         </div>
+         <div class="social-provider-name my-auto col-xl-10 col-lg-10 col-md-10 col-sm-10 col-xs-10">
+           <span>Login with {{provider.name}}</span>
+      </div>
+      </div>
+    </div>
+    </div>
+    </a>
+    {% endif %}
+</li>
+{% endfor %}

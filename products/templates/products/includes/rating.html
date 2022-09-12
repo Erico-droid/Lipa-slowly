@@ -1,0 +1,25 @@
+{% if comment.rating == 1 %}
+<div class="d-flex flex-row">
+    <div class="comment-stars align-items-center justify-content-center"> <i class="fa fa-star gold"></i> <i class="fa fa-star grey"></i> <i class="fa fa-star grey"></i><i class="fa fa-star grey"></i><i class="fa fa-star grey"></i> </div>
+</div>
+{% elif comment.rating == 2 %}
+<div class="d-flex flex-row">
+    <div class="comment-stars align-items-center justify-content-center"> <i class="fa fa-star gold"></i><i class="fa fa-star gold"></i><i class="fa fa-star grey"></i><i class="fa fa-star grey"></i><i class="fa fa-star grey"></i> </div>
+</div>
+{% elif comment.rating == 3 %}
+<div class="d-flex flex-row">
+    <div class="comment-stars align-items-center justify-content-center"> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star grey"></i> <i class="fa fa-star grey"></i> </div>
+</div>
+{% elif comment.rating == 4 %}
+<div class="d-flex flex-row">
+    <div class="comment-stars align-items-center justify-content-center"> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star grey"></i>
+</div></div>
+{% elif comment.rating == 5 %}
+<div class="d-flex flex-row">
+    <div class="comment-stars align-items-center justify-content-center"> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> </div>
+</div>
+{% else %}
+<div class="d-flex flex-row">
+    <div class="comment-stars align-items-center justify-content-center"> <i class="fa fa-star grey"></i><i class="fa fa-star grey"></i><i class="fa fa-star grey"></i><i class="fa fa-star grey"></i><i class="fa fa-star grey"></i> </div>
+</div>
+{% endif %}

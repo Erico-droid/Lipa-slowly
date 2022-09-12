@@ -1,0 +1,85 @@
+<li class="list-inline-item">
+    <a class="text-black nav-link d-block d-lg-none" href="#" id="mobile-search" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div class="text-center">
+            <div><i class="fas fa-search fa-lg"></i></div>
+            <p class="my-0">Search</p>
+        </div>
+    </a>
+    <div class="dropdown-menu border-0 w-100 p-3 rounded-0 my-0" aria-labelledby="mobile-search">
+        <form class="form" method="GET" action="{% url 'products' %}">
+            <div class="input-group w-100">
+                <input class="form-control border border-black rounded-0" type="text" name="q" placeholder="Search our site">
+                <div class="input-group-append">
+                    <button class="form-control form-control btn btn-black border border-black rounded-0" type="submit">
+                        <span class="icon">
+                            <i class="fas fa-search"></i>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</li>
+<li class="list-inline-item dropdown">
+    <a class="text-black nav-link d-block d-lg-none" href="#" id="user-options" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div class="text-center">
+            <div><i class="fas fa-user fa-lg"></i></div>
+            <p class="my-0">My Account</p>
+        </div>
+    </a>
+    <div class="dropdown-menu border-0" aria-labelledby="user-options">
+        {% if request.user.is_authenticated %}
+            {% if request.user.is_superuser %}
+                <a href="{% url 'add_product' %}" class="dropdown-item">Product Management</a>
+            {% endif %}
+            <a href="{% url 'profile' %}" class="dropdown-item">My Profile</a>
+            <a href="{% url 'account_logout' %}" class="dropdown-item">Logout</a>
+        {% else %}
+            <a href="{% url 'account_signup' %}" class="dropdown-item">Register</a>
+            <a href="{% url 'account_login' %}" class="dropdown-item">Login</a>
+        {% endif %}
+    </div>
+</li>
+<li class="list-inline-item">
+    <a class="{% if grand_total %}text-primary font-weight-bold{% else %}text-black{% endif %} nav-link d-block d-lg-none" href="{% url 'view_bag' %}">
+        <div class="text-center">
+            <div><i class="fas fa-shopping-bag fa-lg"></i></div>
+            <p class="my-0">
+                {% if grand_total %}
+                    ${{ grand_total|floatformat:2 }}
+                {% else %}
+                    $0.00
+                {% endif %}
+            </p>
+        </div>
+    </a>
+</li>
+<div id="wrapper" class="">
+  <div id="sidebar-wrapper" class="sidebar-wrapper">
+    <div class="mobile-site-heading">
+      <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 text-center text-lg-left">
+          <a href="{% url 'home' %}" class="nav-link main-logo-link">
+              <h2 class="logo-font logo text-black my-0"><strong><b>{{site_name}}</b></strong></h2>
+          </a>
+      </div>
+      <div class="pt-2">
+        <ul id="accordionMobile" class="accordion container-fluid">
+          {% for category in base_categories %}
+          <li>
+            <div class="link">{{category.name}}<i class="fa fa-chevron-down chevdown"></i></div>
+            <ul class="submenu">
+              {% for subcategory in category.subcategory.all %}
+              {% if forloop.last %}
+              <li><a href="{% url 'products' %}?subcategory={{subcategory.name}}">{{subcategory.name}}</a></li>
+              <li><a href="{% url 'products' %}?category={{category.name}}">All {{category.name}}</a></li>
+              {% else %}
+              <li><a href="{% url 'products' %}?subcategory={{subcategory.name}}">{{subcategory.name}}</a></li>
+              {% endif %}
+              {% endfor %}
+            </ul>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>

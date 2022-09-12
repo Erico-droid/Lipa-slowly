@@ -1,0 +1,1 @@
+web: gunicorn feeling_fragrant.wsgi:application --log-level debug
